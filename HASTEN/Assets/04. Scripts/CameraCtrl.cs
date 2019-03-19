@@ -5,7 +5,8 @@ using UnityEngine;
 public class CameraCtrl : MonoBehaviour
 {
     private Camera myCamera;
-    public GameObject target;
+    public Transform Target;
+    public int Distance = 6;
     // Start is called before the first frame update
     void Start()
     {
@@ -13,9 +14,10 @@ public class CameraCtrl : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void LateUpdate()
     {
-        Vector3 targetPos = target.transform.position;
-        myCamera.transform.position = new Vector3(targetPos.x, targetPos.y + 6, targetPos.z - 8);
+        Vector3 targetPos = Target.position;
+        myCamera.transform.LookAt(Target);
+        myCamera.transform.position = new Vector3(targetPos.x, targetPos.y + Distance, targetPos.z - Distance);
     }
 }
