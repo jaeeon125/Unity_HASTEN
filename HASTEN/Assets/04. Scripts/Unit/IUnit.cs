@@ -22,8 +22,22 @@ public class CUnit : IUnit
     public int POWER { get { return POWER; } set { POWER = value; } }
     public bool ALIVE { get { return ALIVE; } set { ALIVE = value; } }
 
+    public CUnit(int hp, int mp, int armor, int speed, int power)
+    {
+        HP = hp;
+        MP = mp;
+        ARMOR = armor;
+        SPEED = speed;
+        POWER = power;
+        ALIVE = true;
+    }
+
     public void getDamage(int damage)
     {
-
+        damage -= this.ARMOR;
+        if (damage < 0)
+            this.HP -= 1;
+        else
+            this.HP -= damage;
     }
 }
