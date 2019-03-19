@@ -7,22 +7,28 @@ public interface IUnit
     int HP { get; set; }
     int MP { get; set; }
     int ARMOR { get; set; }
-    int SPEED { get; set; }
+    float SPEED { get; set; }
     int POWER { get; set; }
     bool ALIVE { get; set; }
 
     void getDamage(int damage);
 }
-public class CUnit : IUnit
+public class CUnit : MonoBehaviour, IUnit
 {
-    public int HP { get { return HP; } set { HP = value; } }
-    public int MP { get { return MP; } set { MP = value; } }
-    public int ARMOR { get { return ARMOR; } set { ARMOR = value; } }
-    public int SPEED { get { return SPEED; } set { SPEED = value; } }
-    public int POWER { get { return POWER; } set { POWER = value; } }
-    public bool ALIVE { get { return ALIVE; } set { ALIVE = value; } }
+    private int _HP;
+    public int HP { get { return _HP; } set { _HP = value; } }
+    private int _MP;
+    public int MP { get { return _MP; } set { _MP = value; } }
+    private int _ARMOR;
+    public int ARMOR { get { return _ARMOR; } set { _ARMOR = value; } }
+    private float _SPEED;
+    public float SPEED { get { return _SPEED; } set { _SPEED = value; } }
+    private int _POWER;
+    public int POWER { get { return _POWER; } set { _POWER = value; } }
+    private bool _ALIVE;
+    public bool ALIVE { get { return _ALIVE; } set { _ALIVE = value; } }
 
-    public CUnit(int hp, int mp, int armor, int speed, int power)
+    public void StatusInit(int hp, int mp, int armor, float speed, int power)
     {
         HP = hp;
         MP = mp;
