@@ -16,6 +16,7 @@ public class PlayerCtrl : MonoBehaviour
         if(Input.GetKey(KeyCode.W))
         {
             this.transform.Translate(this.transform.forward * Time.deltaTime);
+            //asdasdasd
         }
     }
 }
