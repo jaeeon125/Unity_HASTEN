@@ -4,7 +4,7 @@
 PlayerSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 15
-  productGUID: a7c70910089cb0a40bde1c04aa458abf
+  productGUID: 7b5bbfd60838f86469a789f93f5fbc84
   AndroidProfiler: 0
   AndroidFilterTouchesWhenObscured: 0
   AndroidEnableSustainedPerformanceMode: 0
@@ -618,9 +618,9 @@ PlayerSettings:
   facebookXfbml: 0
   facebookFrictionlessRequests: 1
   apiCompatibilityLevel: 6
-  cloudProjectId: d618e0f3-a6c3-4991-a2ec-04cec4a8e094
+  cloudProjectId: 6dd6134e-c33b-4d21-9dcc-2563a290f655
   framebufferDepthMemorylessMode: 0
-  projectName: HASTEN
+  projectName: HASTEN (1)
   organizationId: wogjs6028
   cloudEnabled: 0
   enableNativePlatformBackendsForNewInputSystem: 0
