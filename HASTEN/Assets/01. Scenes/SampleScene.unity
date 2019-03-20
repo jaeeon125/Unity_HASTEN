@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 170076734}
-  m_IndirectSpecularColor: {r: 0.44657868, g: 0.49641263, b: 0.57481706, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481694, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -700,19 +700,13 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1484384327}
   m_CullTransparentMesh: 0
---- !u!1 &1820706389 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 938599900888628169, guid: 4e43501825c145740b99e99d51fc3e7f,
+--- !u!114 &1820706390 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1820706390, guid: 4e43501825c145740b99e99d51fc3e7f,
     type: 3}
   m_PrefabInstance: {fileID: 4412550604591493677}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1820706390
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1820706389}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2d0d7fbf0fe16b54d9726eadca0f337a, type: 3}
@@ -858,7 +852,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &4412550604591493677
 PrefabInstance:
@@ -910,7 +904,7 @@ PrefabInstance:
     - target: {fileID: 3503704600053832170, guid: 4e43501825c145740b99e99d51fc3e7f,
         type: 3}
       propertyPath: m_RootOrder
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3503704600053832170, guid: 4e43501825c145740b99e99d51fc3e7f,
         type: 3}
@@ -926,6 +920,10 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 563216594, guid: 4e43501825c145740b99e99d51fc3e7f, type: 3}
+      propertyPath: m_IsKinematic
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4e43501825c145740b99e99d51fc3e7f, type: 3}
