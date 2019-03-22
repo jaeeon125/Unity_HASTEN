@@ -15,10 +15,15 @@ public class JoyStick : MonoBehaviour
     private float Radius;           // 조이스틱 배경의 반 지름.
     private bool MoveFlag;          // 플레이어 움직임 스위치.
 
+    //PlayerCtrl
+    private PlayerCtrl pCtrl;
+    private float RunDist = 1.0f;
+
     private float Speed;
 
     void Start()
     {
+        pCtrl = Player.GetComponentInChildren<PlayerCtrl>();
         Speed = Player.GetComponent<PlayerState>().SPEED;
         Radius = GetComponent<RectTransform>().sizeDelta.y * 0.5f;
         StickFirstPos = Stick.transform.position;
@@ -32,7 +37,7 @@ public class JoyStick : MonoBehaviour
 
     void Update()
     {
-        if (MoveFlag)
+        if (MoveFlag && pCtrl.getState() != PlayerCtrl.State.Attack)
             Player.transform.Translate(Vector3.forward * Time.deltaTime * Speed);
     }
 
@@ -49,6 +54,10 @@ public class JoyStick : MonoBehaviour
         // 조이스틱의 처음 위치와 현재 내가 터치하고있는 위치의 거리를 구한다.
         float Dis = Vector3.Distance(Pos, StickFirstPos);
 
+        //Animation->Run
+        if (Dis >= RunDist && pCtrl.getState() == PlayerCtrl.State.Idle)
+            pCtrl.setState(PlayerCtrl.State.Run);
+
         // 거리가 반지름보다 작으면 조이스틱을 현재 터치하고 있는 곳으로 이동.
         if (Dis < Radius)
             Stick.position = StickFirstPos + JoyVec * Dis;
@@ -56,7 +65,11 @@ public class JoyStick : MonoBehaviour
         else
             Stick.position = StickFirstPos + JoyVec * Radius;
 
-        Player.eulerAngles = new Vector3(0, Mathf.Atan2(JoyVec.x, JoyVec.y) * Mathf.Rad2Deg, 0);
+        Vector3 angles = new Vector3(0, Mathf.Atan2(JoyVec.x, JoyVec.y) * Mathf.Rad2Deg, 0);
+        if (pCtrl.getState() != PlayerCtrl.State.Attack)
+            Player.eulerAngles = angles;
+        else
+            pCtrl.EndAttack(angles);
     }
 
     // 드래그 끝.
@@ -65,5 +78,7 @@ public class JoyStick : MonoBehaviour
         Stick.position = StickFirstPos; // 스틱을 원래의 위치로.
         JoyVec = Vector3.zero;          // 방향을 0으로.
         MoveFlag = false;
+        //Animation
+        pCtrl.setState(PlayerCtrl.State.Idle);
     }
 }
