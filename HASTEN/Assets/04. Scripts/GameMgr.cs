@@ -31,6 +31,6 @@ public class GameMgr : MonoBehaviour
 
     public void Init()
     {
-        P_State.StatusInit(100, 50, 10, 5, 10);
+        P_State.StatusInit(100, 50, 10, 8, 10);
     }
 }
