@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 130cac6b96af6214296215324b5da188
+guid: f4b17836420ba1e4cb2c2d6a18d84964
 ModelImporter:
   serializedVersion: 23
   fileIDToRecycleName:
@@ -125,7 +125,12 @@ ModelImporter:
     9500000: //RootNode
     11100000: //RootNode
     13700000: Mesh
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: RetopoGroup2_Default__texture_spider_jpg
+    second: {fileID: 2100000, guid: cb93844a1a4458840814893dbe1a28dd, type: 2}
   materials:
     importMaterials: 1
     materialName: 0

@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: f5a9bd478ca094495a4520e37f57420d
+guid: 39fbcc5b63c15bf40b2d8abf72909afe
 ModelImporter:
   serializedVersion: 23
   fileIDToRecycleName:
@@ -127,7 +127,12 @@ ModelImporter:
     7400008: die
     9500000: //RootNode
     13700000: mesh
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: spider_mat
+    second: {fileID: 2100000, guid: a550c081e9ac0a14a96882b7bf776025, type: 2}
   materials:
     importMaterials: 1
     materialName: 1
@@ -899,8 +904,8 @@ ModelImporter:
     secondaryUVHardAngle: 88
     secondaryUVPackMargin: 4
     useFileScale: 0
-    previousCalculatedGlobalScale: 1
-    hasPreviousCalculatedGlobalScale: 0
+    previousCalculatedGlobalScale: 0.01
+    hasPreviousCalculatedGlobalScale: 1
   tangentSpace:
     normalSmoothAngle: 60
     normalImportMode: 0
