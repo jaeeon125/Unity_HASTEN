@@ -65,7 +65,7 @@ public class JoyStick : MonoBehaviour
         else
             Stick.position = StickFirstPos + JoyVec * Radius;
 
-        Vector3 angles = new Vector3(0, Mathf.Atan2(JoyVec.x, JoyVec.y) * Mathf.Rad2Deg, 0);
+        Vector3 angles = new Vector3(0, Mathf.Atan2(JoyVec.x, JoyVec.y) * Mathf.Rad2Deg + Camera.main.transform.eulerAngles.y, 0);
         if (pCtrl.getState() != PlayerCtrl.State.Attack)
             Player.eulerAngles = angles;
         else
