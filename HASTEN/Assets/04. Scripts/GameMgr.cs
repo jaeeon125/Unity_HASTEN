@@ -7,8 +7,12 @@ public class GameMgr : MonoBehaviour
     private static GameMgr Instance = null;
     private GameMgr() { }
     //
+    public GameObject ControllCanvas;
+    //
+    public Transform P_Trans;
     public PlayerState P_State;
     //
+    public BuildingMgr B_Mgr;
 
     public static GameMgr getInst()
     {
@@ -26,7 +30,7 @@ public class GameMgr : MonoBehaviour
 
     public void Start()
     {
-        
+        P_Trans = GameObject.Find("Player").GetComponent<Transform>();
     }
 
     public void Init()

@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerCtrl : MonoBehaviour
 {
     public enum State {
-        Idle, Run, Attack
+        Idle, Run, Attack, InPotal
     }
     public Transform parentTrans;   //어택 후 부모 객체의 각도 변경을 위해
 
@@ -15,6 +15,9 @@ public class PlayerCtrl : MonoBehaviour
     private bool AttackEnd = false;
     private bool AttackMotion = false;  //어택 모션이 곂치는 경우가 있어서 예외 처리
     private Vector3 EndAngles = Vector3.zero;
+    //
+    public Potal potal = null;
+    //
     public void setState(State state)
     {
         this.e_State = state;
@@ -55,9 +58,22 @@ public class PlayerCtrl : MonoBehaviour
                     StartCoroutine(ComboAttack());
                 }
                 break;
+            case State.InPotal:
+                StartCoroutine(OnPotal());
+                break;
             default:
                 break;
         }
+    }
+    IEnumerator OnPotal()
+    {
+        GameMgr.getInst().ControllCanvas.SetActive(false);
+        this.Anim.SetTrigger("InPotal");    
+        //조이스틱 등 버튼들 조작 불가 상태 추가
+        yield return new WaitForSeconds(1.0f);
+        this.Anim.SetTrigger("IsIdle"); //공격 후 다시 Idle 상태로 설정
+        this.e_State = State.Idle;
+        GameMgr.getInst().ControllCanvas.SetActive(true);
     }
     IEnumerator ComboAttack()
     {
@@ -86,5 +102,13 @@ public class PlayerCtrl : MonoBehaviour
         AttackEnd = false;
         if(this.e_State != State.Attack)    //이미 어택이 실행 중일 때는 다시 코루틴을 호출 하지 않기 위해
             this.setState(State.Attack);
+    }
+    public void OnJump()
+    {
+        if (potal)
+        {
+            potal.Active();
+            this.setState(State.InPotal);
+        }
     }
 }
