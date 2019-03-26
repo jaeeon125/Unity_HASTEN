@@ -6,16 +6,17 @@ using UnityEngine.EventSystems;
 public class CameraCtrl : MonoBehaviour
 {
     public Transform Target;
-    //up 왼쪽/ down 오른쪽
+
     private bool TouchScreen = false;
     private float firstTouch = 0f;
 
-    private float Distance_Y = 17;
-    private float Distance_Z = 15;
+    private float Distance_Y = 19;
+    private float Distance_Z = 16;
 
     private Vector3 targetPos = Vector3.zero;
 
-    private float dragSpeed = 50;
+    private float dragSpeed = 10f;
+
     void Start()
     {
         targetPos = Target.position;
@@ -29,7 +30,6 @@ public class CameraCtrl : MonoBehaviour
         {
             if (!EventSystem.current.IsPointerOverGameObject())
             {
-                firstTouch = Input.mousePosition.x;
                 TouchScreen = true;
                 StartCoroutine(ScreenMove());
             }
@@ -41,15 +41,19 @@ public class CameraCtrl : MonoBehaviour
     {
         while (TouchScreen)
         {
-            if ((firstTouch - Input.mousePosition.x) > 0)
-                this.transform.RotateAround(Target.position, Vector3.down, dragSpeed * Time.deltaTime);
-            else if ((firstTouch - Input.mousePosition.x) < 0)
-                this.transform.RotateAround(Target.position, Vector3.up, dragSpeed * Time.deltaTime);
+            firstTouch = Input.mousePosition.x;
+            yield return null;
+            float dist = firstTouch - Input.mousePosition.x;
+            
+            if (dist > 0)
+                this.transform.RotateAround(Target.position, Vector3.down, dragSpeed * Time.deltaTime * Mathf.Abs(dist));
+            else if (dist < 0)
+                this.transform.RotateAround(Target.position, Vector3.up, dragSpeed * Time.deltaTime * Mathf.Abs(dist));
 
             yield return null;
         }
     }
-    IEnumerator FollowCam() 
+    IEnumerator FollowCam()
     {
         while (true)
         {
@@ -60,4 +64,24 @@ public class CameraCtrl : MonoBehaviour
             this.transform.position -= (befPos - curPos);
         }
     }
+
+
+    //void Rayser()
+    //{
+    //    Vector3 ScreenPos = Camera.main.WorldToScreenPoint(playerCollider.transform.position);
+    //    Ray ray = Camera.main.ScreenPointToRay(ScreenPos);
+    //    RaycastHit[] hitInfos = Physics.RaycastAll(ray);
+    //    foreach (RaycastHit hitInfo in hitInfos)
+    //    {
+    //        Debug.Log(hitInfo.collider.name);
+    //        if ((hitInfo.collider.gameObject.tag != "Player") && (hitInfo.collider.gameObject.tag != "Monster"))
+    //        {
+    //            Material translucent = hitInfo.collider.gameObject.GetComponent<Renderer>().material;
+    //            translucent.SetFloat("_Mode", 2);
+    //            translucent.color = new Color(translucent.color.r, translucent.color.g, translucent.color.b, 0.5f);
+    //            translucent.renderQueue = 3000;
+    //        }
+
+    //    }
+    //}
 }
