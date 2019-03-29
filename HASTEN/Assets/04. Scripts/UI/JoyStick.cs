@@ -13,11 +13,10 @@ public class JoyStick : MonoBehaviour
     private Vector3 StickFirstPos;  // 조이스틱의 처음 위치.
     private Vector3 JoyVec;         // 조이스틱의 벡터(방향)
     private float Radius;           // 조이스틱 배경의 반 지름.
-    private bool MoveFlag;          // 플레이어 움직임 스위치.
+    public bool MoveFlag;          // 플레이어 움직임 스위치.
 
     //PlayerCtrl
     private PlayerCtrl pCtrl;
-    private float RunDist = 1.0f;
 
     private float Speed;
 
@@ -53,9 +52,8 @@ public class JoyStick : MonoBehaviour
 
         // 조이스틱의 처음 위치와 현재 내가 터치하고있는 위치의 거리를 구한다.
         float Dis = Vector3.Distance(Pos, StickFirstPos);
-
         //Animation->Run
-        if (Dis >= RunDist && pCtrl.getState() == PlayerCtrl.State.Idle)
+        if (pCtrl.getState() == PlayerCtrl.State.Idle)
             pCtrl.setState(PlayerCtrl.State.Run);
 
         // 거리가 반지름보다 작으면 조이스틱을 현재 터치하고 있는 곳으로 이동.
@@ -66,10 +64,9 @@ public class JoyStick : MonoBehaviour
             Stick.position = StickFirstPos + JoyVec * Radius;
 
         Vector3 angles = new Vector3(0, Mathf.Atan2(JoyVec.x, JoyVec.y) * Mathf.Rad2Deg + Camera.main.transform.eulerAngles.y, 0);
-        if (pCtrl.getState() != PlayerCtrl.State.Attack)
+        if (pCtrl.getState() != PlayerCtrl.State.Attack) 
             Player.eulerAngles = angles;
-        else
-            pCtrl.EndAttack(angles);
+        pCtrl.EndAttack(angles);
     }
 
     // 드래그 끝.
@@ -80,5 +77,6 @@ public class JoyStick : MonoBehaviour
         MoveFlag = false;
         //Animation
         pCtrl.setState(PlayerCtrl.State.Idle);
+        pCtrl.EndAttack(pCtrl.transform.eulerAngles);
     }
 }

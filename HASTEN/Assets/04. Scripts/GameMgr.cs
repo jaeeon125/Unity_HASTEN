@@ -8,6 +8,7 @@ public class GameMgr : MonoBehaviour
     private GameMgr() { }
     //
     public GameObject ControllCanvas;
+    public JoyStick Joystick;
     //
     public Transform P_Trans;
     public PlayerState P_State;

@@ -81,7 +81,7 @@ public class PlayerCtrl : MonoBehaviour
         while (true)
         {
             AttackEnd = true;
-            yield return new WaitForSeconds(2.0f);
+            yield return new WaitForSeconds(1.2f);
             AttackCnt += 1;
             if (!AttackEnd && AttackCnt != 4)//AttackEnd가 거짓으로 변했다면 1.5초 안에 버튼을 다시 클릭했다는 것
                 this.Anim.SetTrigger("Attack0" + AttackCnt.ToString());
@@ -89,9 +89,13 @@ public class PlayerCtrl : MonoBehaviour
                 break;
         }
         AttackMotion = false;
-        parentTrans.eulerAngles = EndAngles; //EndAttack으로 설정한 각도 적용
         this.Anim.SetTrigger("IsIdle"); //공격 후 다시 Idle 상태로 설정
-        this.e_State = State.Idle;
+        if (GameMgr.getInst().Joystick.MoveFlag)
+            this.setState(State.Run);
+        else
+            this.setState(State.Idle);
+        yield return null;
+        parentTrans.eulerAngles = EndAngles; //EndAttack으로 설정한 각도 적용
     }
     public void EndAttack(Vector3 angles) //어택이 끝날 시 플레이어가 보는 각도 재설정
     {
