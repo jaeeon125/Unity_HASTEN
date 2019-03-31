@@ -38,12 +38,23 @@ public class CUnit : MonoBehaviour, IUnit
         ALIVE = true;
     }
 
-    public void getDamage(int damage)
+    public void getDamage(int power)
     {
-        damage -= this.ARMOR;
-        if (damage < 0)
-            this.HP -= 1;
-        else
-            this.HP -= damage;
+        int damage = (int)(power * Random.Range(0.8f, 1.2f)) - this.ARMOR;
+
+        if (damage <= 0)
+            damage = 1;
+        this.HP -= damage;
+        this.HP = this.HP < 0 ? 0 : this.HP;
+        //Text
+        Debug.Log(damage + ", " + HP);
+        //사망
+        if (this.HP == 0)
+            Dead();
+    }
+
+    public virtual void Dead()
+    {
+        this.ALIVE = false;
     }
 }

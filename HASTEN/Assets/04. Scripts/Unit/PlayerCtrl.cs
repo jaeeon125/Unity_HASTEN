@@ -18,6 +18,9 @@ public class PlayerCtrl : MonoBehaviour
     //
     public Potal potal = null;
     //
+
+    private BoxCollider axe;
+
     public void setState(State state)
     {
         this.e_State = state;
@@ -33,6 +36,9 @@ public class PlayerCtrl : MonoBehaviour
         p_State = this.GetComponentInParent<PlayerState>();
         Anim = this.GetComponent<Animator>();
         setState(State.Idle);   //시작 시 Idle 상태로 설정
+
+        axe = GetComponentInChildren<BoxCollider>();
+        axe.enabled = false;
     }
     private void Update()   
     {
@@ -90,6 +96,7 @@ public class PlayerCtrl : MonoBehaviour
         }
         AttackMotion = false;
         this.Anim.SetTrigger("IsIdle"); //공격 후 다시 Idle 상태로 설정
+        axe.enabled = false;
         if (GameMgr.getInst().Joystick.MoveFlag)
             this.setState(State.Run);
         else
@@ -103,6 +110,7 @@ public class PlayerCtrl : MonoBehaviour
     }
     public void OnAttack()  //Attack_Btn 클릭 시
     {
+        axe.enabled = true;
         AttackEnd = false;
         if(this.e_State != State.Attack)    //이미 어택이 실행 중일 때는 다시 코루틴을 호출 하지 않기 위해
             this.setState(State.Attack);
@@ -113,6 +121,24 @@ public class PlayerCtrl : MonoBehaviour
         {
             potal.Active();
             this.setState(State.InPotal);
+        }
+    }
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == "Enemy")
+        {
+            Monster mon = other.GetComponent<Monster>();
+            //
+            //damage 적용            
+            //
+            if (!mon.isAttacked)
+            {
+                mon.isAttacked = true;
+                mon.target = this.transform;
+                mon.StartCoroutine(mon.AttackAction());
+                mon.gameObject.transform.LookAt(this.transform.position);
+            }
+            mon.getDamage(p_State.POWER);
         }
     }
 }

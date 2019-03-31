@@ -41,6 +41,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 795b610068752c64ba104b67a640c34c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  state: 0
+  target: {fileID: 0}
+  isAttacked: 0
 --- !u!195 &345131197
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -51,7 +54,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 7
+  m_Speed: 2
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
@@ -122,6 +125,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 9500000, guid: 39fbcc5b63c15bf40b2d8abf72909afe, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: f6a74b1f700046044b72e309ec995575, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 39fbcc5b63c15bf40b2d8abf72909afe, type: 3}
 --- !u!1 &3551447695257042992 stripped
