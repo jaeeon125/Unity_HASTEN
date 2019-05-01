@@ -10,13 +10,16 @@ public class Monster : CUnit
         Idle, Attack, Trace
     }
 
-    private Animation Anim;
+    private Animator Anim;
     private State state;
     private NavMeshAgent nav;
-
+    public bool isAttacked;
+    private float attackRange = 3f;
     // Start is called before the first frame update
     void Start()
     {
+        Anim = this.GetComponent<Animator>();
+
         this.nav = this.GetComponent<NavMeshAgent>();
         this.state = State.Idle;
         this.StatusInit(100, 0, 10, 0, 10);
@@ -27,13 +30,17 @@ public class Monster : CUnit
     // Update is called once per frame
     void Update()
     {
-
+        if (this.nav.remainingDistance <= 0.8f || this.nav.isStopped)
+            this.Anim.SetBool("IsRun", false);
     }
 
     IEnumerator Action()
     {
         while (this.ALIVE)
         {
+            if (isAttacked)
+                this.state = State.Attack;
+            
             switch (this.state)
             {
                 case State.Idle:
@@ -41,6 +48,7 @@ public class Monster : CUnit
                     if (this.nav.isStopped)
                     {
                         this.nav.isStopped = false;
+                        this.Anim.SetBool("IsRun", true);
                         this.nav.SetDestination(RandomDirection());
                         yield return new WaitForSeconds(time);
                     }
@@ -51,12 +59,24 @@ public class Monster : CUnit
                     }
                     break;
                 case State.Attack:
+                    this.nav.isStopped = false;
+                    this.nav.SetDestination(GameObject.FindGameObjectWithTag("Player").transform.position);
+                    this.Anim.SetBool("IsWalk", true);
+                    while(this.ALIVE || GameObject.FindGameObjectWithTag("Player"))
+                        if (this.nav.remainingDistance < attackRange)
+                        {
+                            this.nav.isStopped = true;
+                            this.transform.LookAt(GameObject.FindWithTag("Player").transform);
+                            this.Anim.SetTrigger("Attack");
+                        }
+                        
                     break;
                 case State.Trace:
                     break;
                 default:
                     break;
             }
+            yield return null;
         }
     }
     public Vector3 RandomDirection()
@@ -65,5 +85,4 @@ public class Monster : CUnit
             , this.transform.position.z + Random.Range(-30, 30));
         return dir;
     }
-
 }

@@ -115,4 +115,10 @@ public class PlayerCtrl : MonoBehaviour
             this.setState(State.InPotal);
         }
     }
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == "Enemy" && this.e_State == State.Attack) 
+            other.GetComponent<Monster>().isAttacked = true;
+    }
+
 }
