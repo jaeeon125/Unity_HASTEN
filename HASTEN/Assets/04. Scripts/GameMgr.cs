@@ -6,7 +6,7 @@ public class GameMgr : MonoBehaviour
 {
     private static GameMgr Instance = null;
     private GameMgr() { }
-    //
+    
     public GameObject ControllCanvas;
     public JoyStick Joystick;
     //
