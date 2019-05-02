@@ -2,23 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Item : MonoBehaviour
+public class Item 
 {
-    private Inventory playerInven; //플레이어 인벤토리
     public enum Type
     {
         Use, Mat
     }
-    //string, 이미지, 설명, 
-    private void OnTriggerEnter(Collider other)
+    public Type itemType;
+    public string itemName;
+    public string itemCmt;
+
+    public Item(Type type, string name, string cmt)
     {
-        Debug.Log(other.name);
-        if(other.tag=="Item")
-        {
-            Debug.Log("A");
-            playerInven.gainItem(other.name);
-            Destroy(this);
-            
-        }
+        this.itemType = type;
+        this.itemName = name;
+        this.itemCmt = cmt;
     }
 }
