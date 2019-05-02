@@ -17,6 +17,7 @@ public class Monster : CUnit
 
     public bool isAttacked;
     private float AttackDist = 5.0f;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -24,22 +25,15 @@ public class Monster : CUnit
         this.nav = this.GetComponent<NavMeshAgent>();
         this.state = State.Idle;
         this.StatusInit(80, 0, 3, 0, 5);
-
         this.nav.isStopped = true;
         StartCoroutine(IdleAction());
     }
 
-    // Update is called once per frame
-    void Update()
-    {
- 
-    }
-
     public IEnumerator IdleAction()    //기본 상태 // 랜덤 이동
     {
-        this.Anim.SetBool("IsWalk", false);
         while (this.ALIVE)
         {
+            this.Anim.SetBool("IsWalk", false);
             if (this.nav.isStopped && !isAttacked)
             {
                 this.Anim.SetBool("IsWalk", true);
@@ -65,14 +59,13 @@ public class Monster : CUnit
     public IEnumerator AttackAction()
     {
         this.state = State.Trace;
-        while (this.target) //타겟이 null이 아닐 때
+        while (this.target && this.ALIVE) //타겟이 null이 아닐 때
         {
             switch (this.state)
             {
                 case State.Attack:
                     this.transform.LookAt(target);
                     this.Anim.SetTrigger("Attack");
-                    //타겟 hp 
                     this.state = State.Trace;
                     break;
                 case State.Trace:
@@ -95,18 +88,7 @@ public class Monster : CUnit
                         target = null;
                     }
                     break;
-                //case State.Hit:
-                //    Debug.Log("Hit");
-                //    this.nav.isStopped = true;
-                //    this.Anim.SetTrigger("Hit");
-                //    yield return new WaitForSeconds(0.5f);
-                //    this.state = State.Trace;
-                //    break;
-                default:
-                    break;
             }
-            // trace 범위 벗어나거나 플레이어가 죽을 경우 target = null 로 바꿔서
-            // while문 빠져나가고 다시 idleaction 호출
             yield return null;
         }
         this.nav.isStopped = true;
@@ -125,6 +107,16 @@ public class Monster : CUnit
     public override void Dead()
     {
         base.Dead();
-        Debug.Log("죽음");
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (this.state == State.Attack && other.tag == "Player")
+        {
+            float hpgage = (float)GameMgr.getInst().P_State.HP / (float)GameMgr.getInst().P_State.MAXHP;
+            GameMgr.getInst().P_State.getDamage(this.POWER);
+            GameMgr.getInst().PlayerSlider.GetComponent<PlayerHPBar>().Slider(hpgage);
+        }
+            
     }
 }

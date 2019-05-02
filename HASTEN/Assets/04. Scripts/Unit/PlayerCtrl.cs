@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
 public class PlayerCtrl : MonoBehaviour
 {
     public enum State {
@@ -39,6 +38,7 @@ public class PlayerCtrl : MonoBehaviour
 
         axe = GetComponentInChildren<BoxCollider>();
         axe.enabled = false;
+
     }
     private void Update()   
     {
@@ -128,9 +128,7 @@ public class PlayerCtrl : MonoBehaviour
         if (other.tag == "Enemy")
         {
             Monster mon = other.GetComponent<Monster>();
-            //
-            //damage 적용            
-            //
+            
             if (!mon.isAttacked)
             {
                 mon.isAttacked = true;
@@ -139,6 +137,13 @@ public class PlayerCtrl : MonoBehaviour
                 mon.gameObject.transform.LookAt(this.transform.position);
             }
             mon.getDamage(p_State.POWER);
+            if (!GameMgr.getInst().IsHPBarActive)
+            {
+                GameMgr.getInst().HPBar.gameObject.SetActive(true);
+                GameMgr.getInst().IsHPBarActive = true;
+            }
+            float Hpgage = (float)mon.HP / (float)mon.MAXHP;
+            GameMgr.getInst().HPBar.GetComponent<HPBar>().Slider(Hpgage);
         }
     }
 }
