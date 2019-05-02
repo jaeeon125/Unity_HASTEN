@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.UI;
 public class GameMgr : MonoBehaviour
 {
     private static GameMgr Instance = null;
@@ -14,6 +14,11 @@ public class GameMgr : MonoBehaviour
     public PlayerState P_State;
     //
     public BuildingMgr B_Mgr;
+    public ItemManager I_Mgr;
+
+    public Slider PlayerSlider;
+    public Slider HPBar;
+    public bool IsHPBarActive;
 
     public static GameMgr getInst()
     {
