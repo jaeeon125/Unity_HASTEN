@@ -2,22 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-<<<<<<< HEAD
 public class Inventory : MonoBehaviour
 {
-    public GameObject InventoryPanel;
     private bool isOnInventory;
+    public GameObject inventory;
 
     public void onInventory()
     {
-        if (isOnInventory)
-            InventoryPanel.gameObject.SetActive(false);
-        else
-            InventoryPanel.gameObject.SetActive(true);
         isOnInventory = !isOnInventory;
+        inventory.gameObject.SetActive(isOnInventory);
     }
-=======
-public class Inventory 
-{
->>>>>>> develop
 }

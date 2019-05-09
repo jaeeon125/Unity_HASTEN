@@ -2,11 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-<<<<<<< HEAD
-public class Item
-{
-    
-=======
 public class Item 
 {
     public enum Type
@@ -23,5 +18,4 @@ public class Item
         this.itemName = name;
         this.itemCmt = cmt;
     }
->>>>>>> develop
 }
