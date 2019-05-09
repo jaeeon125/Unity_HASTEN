@@ -7,116 +7,82 @@ public class Monster : CUnit
 { 
     public enum State
     {
-        Idle, Attack, Trace, Hit
+        Idle, Attack, Trace
     }
 
     private Animator Anim;
-    public State state;
+    private State state;
     private NavMeshAgent nav;
-    public Transform target;
-
     public bool isAttacked;
-    private float AttackDist = 5.0f;
-
+    private float attackRange = 3f;
     // Start is called before the first frame update
     void Start()
     {
         Anim = this.GetComponent<Animator>();
+
         this.nav = this.GetComponent<NavMeshAgent>();
         this.state = State.Idle;
-        this.StatusInit(80, 0, 3, 0, 5);
-        this.nav.isStopped = true;
-        StartCoroutine(IdleAction());
+        this.StatusInit(100, 0, 10, 0, 10);
+        
+        StartCoroutine(Action());
     }
 
-    public IEnumerator IdleAction()    //기본 상태 // 랜덤 이동
+    // Update is called once per frame
+    void Update()
+    {
+        if (this.nav.remainingDistance <= 0.8f || this.nav.isStopped)
+            this.Anim.SetBool("IsRun", false);
+    }
+
+    IEnumerator Action()
     {
         while (this.ALIVE)
         {
-            this.Anim.SetBool("IsWalk", false);
-            if (this.nav.isStopped && !isAttacked)
-            {
-                this.Anim.SetBool("IsWalk", true);
-                this.nav.isStopped = false;
-                this.nav.SetDestination(RandomDirection());
-                yield return new WaitForSeconds(Random.Range(3, 7));
-            }
-            else if(!this.nav.isStopped && !isAttacked)
-            {
-                this.Anim.SetBool("IsWalk", false);
-                this.nav.isStopped = true;
-                yield return new WaitForSeconds(2.0f);
-            }
-            else
-            {
-                break;
-            }
-        }
-        this.Anim.SetBool("IsWalk", true);
-        yield return null;
-    }
-
-    public IEnumerator AttackAction()
-    {
-        this.state = State.Trace;
-        while (this.target && this.ALIVE) //타겟이 null이 아닐 때
-        {
+            if (isAttacked)
+                this.state = State.Attack;
+            
             switch (this.state)
             {
-                case State.Attack:
-                    this.transform.LookAt(target);
-                    this.Anim.SetTrigger("Attack");
-                    this.state = State.Trace;
-                    break;
-                case State.Trace:
-                    float dist = Vector3.Distance(this.transform.position, target.position);
-                    if (dist <= AttackDist)
-                    {
-                        this.nav.isStopped = true;
-                        this.state = State.Attack;
-                        yield return new WaitForSeconds(2.0f);
-                    }
-                    else if(dist > AttackDist && dist < 25.0f)
+                case State.Idle:
+                    float time = Random.Range(3, 7);
+                    if (this.nav.isStopped)
                     {
                         this.nav.isStopped = false;
-                        this.nav.SetDestination(target.position);
-                        this.Anim.SetTrigger("Walk");
-                        yield return new WaitForSeconds(1.0f);
+                        this.Anim.SetBool("IsRun", true);
+                        this.nav.SetDestination(RandomDirection());
+                        yield return new WaitForSeconds(time);
                     }
-                    else //추적 끝
+                    else
                     {
-                        target = null;
+                        this.nav.isStopped = true;
+                        yield return new WaitForSeconds(2.0f);
                     }
+                    break;
+                case State.Attack:
+                    this.nav.isStopped = false;
+                    this.nav.SetDestination(GameObject.FindGameObjectWithTag("Player").transform.position);
+                    this.Anim.SetBool("IsWalk", true);
+                    while(this.ALIVE || GameObject.FindGameObjectWithTag("Player"))
+                        if (this.nav.remainingDistance < attackRange)
+                        {
+                            this.nav.isStopped = true;
+                            this.transform.LookAt(GameObject.FindWithTag("Player").transform);
+                            this.Anim.SetTrigger("Attack");
+                        }
+                        
+                    break;
+                case State.Trace:
+                    break;
+                default:
                     break;
             }
             yield return null;
         }
-        this.nav.isStopped = true;
-        this.Anim.SetTrigger("Idle");
-        this.isAttacked = false;
-        StartCoroutine(IdleAction());
-        yield return null;
     }
     public Vector3 RandomDirection()
     {
         Vector3 dir = new Vector3(this.transform.position.x + Random.Range(-30, 30), this.transform.position.y
             , this.transform.position.z + Random.Range(-30, 30));
         return dir;
-    }
-
-    public override void Dead()
-    {
-        base.Dead();
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (this.state == State.Attack && other.tag == "Player")
-        {
-            float hpgage = (float)GameMgr.getInst().P_State.HP / (float)GameMgr.getInst().P_State.MAXHP;
-            GameMgr.getInst().P_State.getDamage(this.POWER);
-            GameMgr.getInst().PlayerSlider.GetComponent<PlayerHPBar>().Slider(hpgage);
-        }
-            
     }
 }
