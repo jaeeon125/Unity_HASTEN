@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 public class ItemManager : MonoBehaviour
 {
-    List<Item> item;
+    List<Item> item = new List<Item>();
     public Text GoldText;
     public Text WoodText;
     private int gold = 0;
@@ -12,7 +12,11 @@ public class ItemManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        item.Add(new Item(Item.Type.Use, "파인애플", "50의 HP를 회복합니다."));
+    }
+    public Item getItem(int number)
+    {
+        return item[number];
     }
 
     public void gainGold(int _gold)

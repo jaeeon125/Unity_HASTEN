@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+<<<<<<< HEAD
 public class Inventory : MonoBehaviour
 {
     public GameObject InventoryPanel;
@@ -15,4 +16,8 @@ public class Inventory : MonoBehaviour
             InventoryPanel.gameObject.SetActive(true);
         isOnInventory = !isOnInventory;
     }
+=======
+public class Inventory 
+{
+>>>>>>> develop
 }
