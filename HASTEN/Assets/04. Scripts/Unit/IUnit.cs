@@ -11,6 +11,8 @@ public interface IUnit
     int POWER { get; set; }
     bool ALIVE { get; set; }
     int MAXHP { get; set; }
+    bool isAttacked { get; set; }
+    Transform target { get; set; }
 
     void getDamage(int damage);
 }
@@ -30,7 +32,10 @@ public class CUnit : MonoBehaviour, IUnit
     public bool ALIVE { get { return _ALIVE; } set { _ALIVE = value; } }
     private int _MAXHP;
     public int MAXHP { get { return _MAXHP; } set { _MAXHP = value; } }
-
+    private bool _isAttacked;
+    public bool isAttacked { get { return _isAttacked; } set { _isAttacked = value; } }
+    private Transform _target;
+    public Transform target { get { return _target; } set { _target = value; } }
 
     public Transform Can;
     
@@ -57,29 +62,19 @@ public class CUnit : MonoBehaviour, IUnit
             this.HP = this.HP < 0 ? 0 : this.HP;
             //사망
             if (this.HP == 0)
-                Dead();
+                StartCoroutine(die());
         }
     }
-    
-    public virtual void Dead()
+
+    public Vector3 RandomDirection()
     {
-        StartCoroutine(die());
+        Vector3 dir = new Vector3(this.transform.position.x + Random.Range(-30, 30), this.transform.position.y
+            , this.transform.position.z + Random.Range(-30, 30));
+        return dir;
     }
 
-    IEnumerator die()
-    {
-        gainItem();
-        this.ALIVE = false;
-        this.GetComponent<Animator>().SetTrigger("Die");
-        yield return new WaitForSeconds(2.5f);
-        Destroy(this.gameObject);
-    }
-
-    void gainItem()
-    {
-        int _gold = (int)Random.Range(8, 12);
-        int _wood = (int)Random.Range(1, 3);
-        GameMgr.getInst().I_Mgr.gainGold(_gold);
-        GameMgr.getInst().I_Mgr.gainWood(_wood);
-    }
+    public virtual void gainItem() { }
+    public virtual IEnumerator die() { yield return null; }
+    public virtual IEnumerator IdleAction() { yield return null; }
+    public virtual IEnumerator AttackAction() { yield return null; }
 }

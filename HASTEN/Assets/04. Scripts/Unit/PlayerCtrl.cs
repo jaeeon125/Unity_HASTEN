@@ -127,22 +127,20 @@ public class PlayerCtrl : MonoBehaviour
     {
         if (other.tag == "Enemy")
         {
-            Monster mon = other.GetComponent<Monster>();
-            
-            if (!mon.isAttacked)
+            if (!other.GetComponent<CUnit>().isAttacked)
             {
-                mon.isAttacked = true;
-                mon.target = this.transform;
-                mon.StartCoroutine(mon.AttackAction());
-                mon.gameObject.transform.LookAt(this.transform.position);
+                other.GetComponent<CUnit>().isAttacked = true;
+                other.GetComponent<CUnit>().target = this.transform;
+                other.GetComponent<CUnit>().StartCoroutine(other.GetComponent<CUnit>().AttackAction());
+                other.GetComponent<CUnit>().gameObject.transform.LookAt(this.transform.position);
             }
-            mon.getDamage(p_State.POWER);
+            other.GetComponent<CUnit>().getDamage(p_State.POWER);
             if (!GameMgr.getInst().IsHPBarActive)
             {
                 GameMgr.getInst().HPBar.gameObject.SetActive(true);
                 GameMgr.getInst().IsHPBarActive = true;
             }
-            float Hpgage = (float)mon.HP / (float)mon.MAXHP;
+            float Hpgage = (float)other.GetComponent<CUnit>().HP / (float)other.GetComponent<CUnit>().MAXHP;
             GameMgr.getInst().HPBar.GetComponent<HPBar>().Slider(Hpgage);
         }
     }

@@ -15,10 +15,15 @@ public class GameMgr : MonoBehaviour
     //
     public BuildingMgr B_Mgr;
     public ItemManager I_Mgr;
+    public Inventory inven;
 
     public Slider PlayerSlider;
     public Slider HPBar;
     public bool IsHPBarActive;
+
+    public Light G_light;
+
+    public int Stage = 1;
 
     public static GameMgr getInst()
     {

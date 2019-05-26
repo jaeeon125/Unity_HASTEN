@@ -3,68 +3,86 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class Monster : CUnit
-{ 
+public class Spider_Boss : CUnit
+{
     public enum State
     {
-        Idle, Attack, Trace, Hit
+        attack1, attack2, attack3, die, idle, run, walk, Attack
     }
-
-    public Animator Anim;
-    public State state;
+    List<string> animArr;
+    private Animation Anim;
+    private State state;
     private NavMeshAgent nav;
-
-    private float AttackDist = 5.0f;
+    private float AttackDist = 5f;
 
     // Start is called before the first frame update
     void Start()
     {
-        Anim = this.GetComponent<Animator>();
-        this.nav = this.GetComponent<NavMeshAgent>();
-        this.state = State.Idle;
-        this.StatusInit(80, 0, 3, 0, 5);
-        this.nav.isStopped = true;
+        Anim = this.GetComponent<Animation>();
+        nav = this.GetComponent<NavMeshAgent>();
+        animArr = new List<string>();
+        AnimationArray();
+        this.state = State.idle;
+        this.StatusInit(15, 0, 2, 1, 10);
         StartCoroutine(IdleAction());
+    }
+
+    void AnimationArray()
+    {
+        foreach(AnimationState state in Anim)
+            animArr.Add(state.name);
+    }
+
+    public override IEnumerator die()
+    {
+        gainItem();
+        this.Anim.Play(animArr[(int)State.die]);
+        yield return new WaitForSeconds(1.5f);
+        Destroy(this.gameObject);
     }
 
     public override IEnumerator IdleAction()    //기본 상태 // 랜덤 이동
     {
         while (this.ALIVE)
         {
-            this.Anim.SetBool("IsWalk", false);
             if (this.nav.isStopped && !isAttacked)
             {
-                this.Anim.SetBool("IsWalk", true);
+                this.Anim.Play(animArr[(int)State.walk]);
                 this.nav.isStopped = false;
                 this.nav.SetDestination(this.RandomDirection());
                 yield return new WaitForSeconds(Random.Range(3, 7));
             }
-            else if(!this.nav.isStopped && !isAttacked)
+            else if (!this.nav.isStopped && !isAttacked)
             {
-                this.Anim.SetBool("IsWalk", false);
+                this.Anim.Play(animArr[(int)State.idle]);
                 this.nav.isStopped = true;
                 yield return new WaitForSeconds(2.0f);
             }
             else
                 break;
         }
-        this.Anim.SetBool("IsWalk", true);
         yield return null;
     }
 
     public override IEnumerator AttackAction()
     {
-        this.state = State.Trace;
+        this.state = State.run;
         while (this.target && this.ALIVE) //타겟이 null이 아닐 때
         {
             switch (this.state)
             {
                 case State.Attack:
                     this.transform.LookAt(target);
-                    this.Anim.SetTrigger("Attack");
-                    this.state = State.Trace;
+                    int attackMode = Random.Range(0, 3);
+                    this.Anim.Play(animArr[attackMode]);
+
+                    float hpgage = (float)GameMgr.getInst().P_State.HP / (float)GameMgr.getInst().P_State.MAXHP;
+                    GameMgr.getInst().P_State.getDamage(this.POWER);
+                    GameMgr.getInst().PlayerSlider.GetComponent<PlayerHPBar>().Slider(hpgage);
+
+                    this.state = State.run;
                     break;
-                case State.Trace:
+                case State.run:
                     float dist = Vector3.Distance(this.transform.position, target.position);
                     if (dist <= AttackDist)
                     {
@@ -72,11 +90,11 @@ public class Monster : CUnit
                         this.state = State.Attack;
                         yield return new WaitForSeconds(2.0f);
                     }
-                    else if(dist > AttackDist && dist < 25.0f)
+                    else if (dist > AttackDist && dist < 25.0f)
                     {
                         this.nav.isStopped = false;
                         this.nav.SetDestination(target.position);
-                        this.Anim.SetTrigger("Walk");
+                        this.Anim.Play(animArr[(int)State.run]);
                         yield return new WaitForSeconds(1.0f);
                     }
                     else //추적 끝
@@ -86,36 +104,18 @@ public class Monster : CUnit
             yield return null;
         }
         this.nav.isStopped = true;
-        this.Anim.SetTrigger("Idle");
+        this.Anim.Play(animArr[(int)State.idle]);
         this.isAttacked = false;
         StartCoroutine(IdleAction());
         yield return null;
     }
 
-    public override IEnumerator die()
-    {
-        gainItem();
-        this.ALIVE = false;
-        this.GetComponent<Animator>().SetTrigger("Die");
-        yield return new WaitForSeconds(1.5f);
-        Destroy(this.gameObject);
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (this.state == State.Attack && other.tag == "Player")
-        {
-            float hpgage = (float)GameMgr.getInst().P_State.HP / (float)GameMgr.getInst().P_State.MAXHP;
-            GameMgr.getInst().P_State.getDamage(this.POWER);
-            GameMgr.getInst().PlayerSlider.GetComponent<PlayerHPBar>().Slider(hpgage);
-        }
-    }
-
     public override void gainItem()
     {
-        int _gold = (int)Random.Range(8, 12);
-        int _wood = (int)Random.Range(1, 3);
+        int _gold = (int)Random.Range(20, 30);
+        int _wood = (int)Random.Range(5, 7);
         GameMgr.getInst().I_Mgr.gainGold(_gold);
         GameMgr.getInst().I_Mgr.gainWood(_wood);
+        GameMgr.getInst().inven.gainItem("Spider Web", 1);
     }
 }
