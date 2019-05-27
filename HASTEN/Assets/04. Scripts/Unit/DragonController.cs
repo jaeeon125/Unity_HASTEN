@@ -12,10 +12,7 @@ public class DragonController : CUnit
     private NavMeshAgent nav;
     private float AttackDist = 5f;
 
-    public GameObject tower;
-    public GameObject HASTEN;
-
-    // Start is called before the first frame update
+    // 현재 랜덤 타워 공격 후 HASTEN 공격으로 설정 -> HASTEN으로 공격 중 타워가 범위 안에 있으면 공격으로 수정해야함, 접근 지정자 수정
     void Start()
     {
         appeareance = GetComponent<Animation>();
@@ -32,6 +29,7 @@ public class DragonController : CUnit
     {
         yield return new WaitForSeconds(2f);
         Destroy(this.GetComponent<Animation>());
+        this.target = GameMgr.getInst().HASTEN.transform;
         this.state = State.Run;
         StartCoroutine(AttackAction());
     }
@@ -40,45 +38,45 @@ public class DragonController : CUnit
     {
         while(this.ALIVE)
         {
-            this.anim.SetBool("isRun", false);
             switch (this.state)
             {
                 case State.Run:
-                    int ran = -1;
-                    this.anim.SetBool("isRun", true);
-                    this.nav.isStopped = false;
-                    int towerCnt = tower.transform.childCount;
-                    if (towerCnt > 0)
+                    float dist = Vector3.Distance(this.transform.position, this.target.transform.position);
+
+                    if (dist <= AttackDist)
                     {
-                        ran = Random.Range(0, towerCnt);
-                        this.nav.SetDestination(tower.transform.GetChild(ran).transform.position);
+                        this.nav.isStopped = true;
+                        this.state = State.Attack;
                     }
                     else
-                        this.nav.SetDestination(HASTEN.transform.position);
-                    while (this.nav.remainingDistance > AttackDist)
                     {
-                        
-                        //yield return new WaitForSeconds(1f);
-                        Debug.Log(this.nav.remainingDistance + " " + this.target);
+                        this.anim.SetTrigger("Run");
+                        this.nav.isStopped = false;
+                        this.nav.SetDestination(target.transform.position);
                     }
-                    this.nav.isStopped = true;
-                    if (this.nav.remainingDistance <= AttackDist && !this.isAttacked && ran != -1)
-                        this.target = tower.transform.GetChild(ran).transform;
-                    else if (this.nav.remainingDistance <= AttackDist && ran == 0)
-                        this.target = HASTEN.transform;
-                    Debug.Log("A");
-                    this.state = State.Attack;
                     yield return null;
                     break;
                 case State.Attack:
                     this.transform.LookAt(target);
                     this.anim.SetTrigger("Attack");
 
-                    float hpgage = (float)GameMgr.getInst().P_State.HP / (float)GameMgr.getInst().P_State.MAXHP;
-                    GameMgr.getInst().P_State.getDamage(this.POWER);
-                    GameMgr.getInst().PlayerSlider.GetComponent<PlayerHPBar>().Slider(hpgage);
+                    if (this.target.tag == "Player")
+                    {
+                        float hpgage = (float)GameMgr.getInst().P_State.HP / (float)GameMgr.getInst().P_State.MAXHP;
+                        GameMgr.getInst().P_State.getDamage(this.POWER);
+                        GameMgr.getInst().PlayerSlider.GetComponent<PlayerHPBar>().Slider(hpgage);
+                    }
+                    else if (this.target.tag == "Tower")
+                    {
+                        //float hpgage = (float)this.target.getcomponent<Tower>().HP / (float)this.target.getcomponent<Tower>().MAXHP;
+                        //this.target.getcomponent<Tower>().getdamage(this.power);
+                    }
+                    else
+                    {
+                        float hpgage = (float)this.target.GetComponent<HASTEN>().HP / (float)this.target.GetComponent<HASTEN>().MAXHP;
+                        this.target.GetComponent<HASTEN>().getDamage(this.POWER);
+                    }
                     yield return new WaitForSeconds(1.3f);
-
                     this.state = State.Run;
                     break;
             }
@@ -91,7 +89,7 @@ public class DragonController : CUnit
         this.ALIVE = false;
         this.anim.SetTrigger("Die");
         yield return new WaitForSeconds(1.3f);
-        Destroy(this);
+        Destroy(this.gameObject);
     }
 
     public override void gainItem()

@@ -62,6 +62,7 @@ public class Monster : CUnit
                 case State.Attack:
                     this.transform.LookAt(target);
                     this.Anim.SetTrigger("Attack");
+                    yield return new WaitForSeconds(0.9f);
                     this.state = State.Trace;
                     break;
                 case State.Trace:
@@ -70,7 +71,7 @@ public class Monster : CUnit
                     {
                         this.nav.isStopped = true;
                         this.state = State.Attack;
-                        yield return new WaitForSeconds(2.0f);
+                        yield return null;
                     }
                     else if(dist > AttackDist && dist < 25.0f)
                     {
@@ -94,8 +95,9 @@ public class Monster : CUnit
 
     public override IEnumerator die()
     {
-        gainItem();
         this.ALIVE = false;
+        this.Anim.SetBool("IsWalk", false);
+        gainItem();
         this.GetComponent<Animator>().SetTrigger("Die");
         yield return new WaitForSeconds(1.5f);
         Destroy(this.gameObject);

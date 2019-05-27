@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Enemy
   - Item
+  - HASTEN
   layers:
   - Default
   - TransparentFX

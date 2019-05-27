@@ -62,7 +62,11 @@ public class CUnit : MonoBehaviour, IUnit
             this.HP = this.HP < 0 ? 0 : this.HP;
             //사망
             if (this.HP == 0)
+            {
+                StopAllCoroutines();
                 StartCoroutine(die());
+            }
+                
         }
     }
 
