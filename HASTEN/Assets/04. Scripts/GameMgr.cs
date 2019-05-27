@@ -21,9 +21,11 @@ public class GameMgr : MonoBehaviour
     public Slider HPBar;
     public bool IsHPBarActive;
 
+    public GameObject HASTEN;
+
     public Light G_light;
 
-    public int Stage = 1;
+    public int Stage = 0;
 
     public static GameMgr getInst()
     {

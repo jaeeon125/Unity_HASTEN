@@ -18,12 +18,14 @@ public class Timer : MonoBehaviour
         {
             time = 300;
             if(isNight)
-            {
                 GameMgr.getInst().G_light.intensity = 0.2f;
-                GameMgr.getInst().Stage++;
-            }
             else
+            {
                 GameMgr.getInst().G_light.intensity = 1f;
+                GameMgr.getInst().Stage++;
+                GameMgr.getInst().HASTEN.GetComponent<HASTEN>().HP = GameMgr.getInst().HASTEN.GetComponent<HASTEN>().MAXHP;
+            }
+                
             isNight = !isNight;
         }
     }

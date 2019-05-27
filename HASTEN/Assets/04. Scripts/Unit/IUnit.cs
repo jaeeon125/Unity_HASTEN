@@ -74,6 +74,7 @@ public class CUnit : MonoBehaviour, IUnit
     }
 
     public virtual void gainItem() { }
+    public virtual Vector3 RandomDirection(Vector3 dir) { return new Vector3(0, 0, 0); }
     public virtual IEnumerator die() { yield return null; }
     public virtual IEnumerator IdleAction() { yield return null; }
     public virtual IEnumerator AttackAction() { yield return null; }

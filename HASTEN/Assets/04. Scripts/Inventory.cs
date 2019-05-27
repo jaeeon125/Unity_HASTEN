@@ -15,12 +15,13 @@ public class Inventory : MonoBehaviour
     public GameObject item4;
     public GameObject item5;
 
-    private void Start()
+    private void Awake()
     {
         inven.Add(new Item(Item.Type.Mat, "Red Crystal", 0));
         inven.Add(new Item(Item.Type.Mat, "Blue Crystal", 0));
         inven.Add(new Item(Item.Type.Mat, "Yellow Crystal", 0));
         inven.Add(new Item(Item.Type.Mat, "Spider Web", 0));
+        inven.Add(new Item(Item.Type.Use, "PianApple", 5));
     }
     public void onInventory()
     {
