@@ -28,7 +28,7 @@ public class CameraCtrl : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            if (!EventSystem.current.IsPointerOverGameObject())
+            if (!EventSystem.current.IsPointerOverGameObject(/*Input.GetTouch(0).fingerId*/))
             {
                 TouchScreen = true;
                 StartCoroutine(ScreenMove());
@@ -64,24 +64,4 @@ public class CameraCtrl : MonoBehaviour
             this.transform.position -= (befPos - curPos);
         }
     }
-
-
-    //void Rayser()
-    //{
-    //    Vector3 ScreenPos = Camera.main.WorldToScreenPoint(playerCollider.transform.position);
-    //    Ray ray = Camera.main.ScreenPointToRay(ScreenPos);
-    //    RaycastHit[] hitInfos = Physics.RaycastAll(ray);
-    //    foreach (RaycastHit hitInfo in hitInfos)
-    //    {
-    //        Debug.Log(hitInfo.collider.name);
-    //        if ((hitInfo.collider.gameObject.tag != "Player") && (hitInfo.collider.gameObject.tag != "Monster"))
-    //        {
-    //            Material translucent = hitInfo.collider.gameObject.GetComponent<Renderer>().material;
-    //            translucent.SetFloat("_Mode", 2);
-    //            translucent.color = new Color(translucent.color.r, translucent.color.g, translucent.color.b, 0.5f);
-    //            translucent.renderQueue = 3000;
-    //        }
-
-    //    }
-    //}
 }

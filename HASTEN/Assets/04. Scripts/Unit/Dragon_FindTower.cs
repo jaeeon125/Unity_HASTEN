@@ -11,7 +11,6 @@ public class Dragon_FindTower : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log(other.tag);
         if (other.tag == "Tower" && Dragon.target != GameMgr.getInst().P_State.transform)
             Dragon.target = other.transform;
     }
