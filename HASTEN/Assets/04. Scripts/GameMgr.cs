@@ -1,12 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.UI;
 public class GameMgr : MonoBehaviour
 {
     private static GameMgr Instance = null;
     private GameMgr() { }
-    //
+    
     public GameObject ControllCanvas;
     public JoyStick Joystick;
     //
@@ -14,6 +14,19 @@ public class GameMgr : MonoBehaviour
     public PlayerState P_State;
     //
     public BuildingMgr B_Mgr;
+    public ItemManager I_Mgr;
+    public Inventory inven;
+
+    public Slider PlayerSlider;
+    public Slider HPBar;
+    public bool IsHPBarActive;
+
+    public GameObject HASTEN;
+
+    public Light G_light;
+
+    public int Stage = 0;
+    public int ButtonIndex = -1;
 
     public static GameMgr getInst()
     {

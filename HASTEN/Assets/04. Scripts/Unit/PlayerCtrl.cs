@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
 public class PlayerCtrl : MonoBehaviour
 {
     public enum State {
@@ -39,6 +38,7 @@ public class PlayerCtrl : MonoBehaviour
 
         axe = GetComponentInChildren<BoxCollider>();
         axe.enabled = false;
+
     }
     private void Update()   
     {
@@ -125,20 +125,24 @@ public class PlayerCtrl : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "Enemy")
+        if (other.gameObject.tag == "Enemy")
         {
-            Monster mon = other.GetComponent<Monster>();
-            //
-            //damage 적용            
-            //
-            if (!mon.isAttacked)
+            if (!other.gameObject.GetComponent<CUnit>().isAttacked)
             {
-                mon.isAttacked = true;
-                mon.target = this.transform;
-                mon.StartCoroutine(mon.AttackAction());
-                mon.gameObject.transform.LookAt(this.transform.position);
+                other.gameObject.GetComponent<CUnit>().isAttacked = true;
+                other.gameObject.GetComponent<CUnit>().target = this.transform;
+                other.gameObject.GetComponent<CUnit>().StartCoroutine(other.gameObject.GetComponent<CUnit>().AttackAction());
+                other.gameObject.GetComponent<CUnit>().gameObject.transform.LookAt(this.transform.position);
             }
-            mon.getDamage(p_State.POWER);
+            other.gameObject.GetComponent<CUnit>().getDamage(p_State.POWER);
+            //if (!GameMgr.getInst().IsHPBarActive)
+            //{
+            //    GameMgr.getInst().HPBar.gameObject.SetActive(true);
+            //    GameMgr.getInst().IsHPBarActive = true;
+            //}
+            //float Hpgage = (float)other.gameObject.GetComponent<CUnit>().HP
+            //    / (float)other.gameObject.GetComponent<CUnit>().MAXHP;
+            //GameMgr.getInst().HPBar.GetComponent<HPBar>().Slider(Hpgage);
         }
     }
 }
